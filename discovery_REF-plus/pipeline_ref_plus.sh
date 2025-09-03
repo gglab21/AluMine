@@ -15,9 +15,25 @@ chimp_list_path="" # Must be writable
 chimp_list_filename="pan_troglodytes_32.list"
 # Help message
 usage() {
-    echo "Usage: $0 -h <human chr ref> -c <chimp chr ref> [-o <output path>] [-f <output filename>]"
+    echo "Usage: $0 -h <human chr ref> -c <chimp chr ref> [-k <kmer list output path>] [-o <output path>] [-f <output filename>]"
     exit 1
 }
+# Parse command-line arguments
+while getopts "h:c:k:o:f:" opt; do
+  case $opt in
+    h) human_chr_path="$OPTARG" ;;
+    c) chimp_chr_path="$OPTARG" ;;
+    k) chimp_list_path="$OPTARG" ;;
+	o) outdir=="$OPTARG" ;;
+ 	f) chimp_list_filename="$OPTARG" ;;
+    *) usage ;;
+  esac
+done
+
+# Check required arguments
+if [[ -z "$human_chr_path" || -z "$chimp_chr_path" ]]; then
+    usage
+fi
 # Create 32-mer list from the chimpanzee genome, if it does not yet exist.
 # NB! The list file size is ca 30 GB
 chimp_list="${chimp_list_path}/${chimp_list_filename}"
@@ -44,7 +60,7 @@ echo -n "Number of REF-plus candidates with TSD sequence: "
 cat Alu.pre-blast.kmer.db | wc -l
 
 # Run BLAST detected candidates and keep only the candidates that have >100 bits of homology with known Alu elements
-blastall -i Alu.pre-blast.fas -d Alu.fas -p blastn -G 1 -E 1 -F F -b 1 -v 1 -m 8 | awk '{if($12>100)print}' | cut -f 1 | sort -n | uniq > Alu.REF-plus.blast
+blastn -query Alu.pre-blast.fas -db Alu -word_size 11 -gapopen 1 -gapextend 1 -dust no -num_alignments 1 -max_target_seqs 1 -outfmt 6 | awk '{if($12>100)print}' | cut -f 1 | sort -n | uniq > Alu.REF-plus.blast
 ./extract_kmers_by_name.pl Alu.REF-plus.blast Alu.pre-blast.kmer.db > Alu.after-blast.kmer.db
 ./extract_fasta_by_name.pl Alu.REF-plus.blast Alu.pre-blast.fas > Alu.REF-plus.fas
 echo -n "Number of candidates after BLAST homology search: "
