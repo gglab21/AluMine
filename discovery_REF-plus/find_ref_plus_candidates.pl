@@ -38,11 +38,15 @@ foreach $chr (@chrs) {
   $chr_seq = "";
   $chr_file_name_1 = $chr_path . "/chr" . $chr . ".fna"; # Recent naming convention is chr1.fna
   $chr_file_name_2 = $chr_path . "/" . $chr . ".fa";     # Older naming convention for chromosomes 1.fa
+  $chr_file_name_3 = $chr_path . "/chr" . $chr . ".fa"; # Recent naming convention is chr1.fna
   if (-s $chr_file_name_1) {
     open (CHR,$chr_file_name_1);
   }
   elsif (-s $chr_file_name_2){
     open (CHR, $chr_file_name_2);
+  }
+  elsif (-s $chr_file_name_3){
+    open (CHR, $chr_file_name_3);
   }
   else{
     die "Could not open the chrosome fasta file. Make sure you have defined the correct path and use correct FASTA file names\n";
