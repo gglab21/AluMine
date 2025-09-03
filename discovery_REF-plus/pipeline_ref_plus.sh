@@ -1,4 +1,3 @@
-
 #!/bin/bash
 
 # Description: This is a pipeline for discovery of REF-plus polymorphic ALU
@@ -10,11 +9,15 @@
 # glistmaker and glistquery from GenomeTester4 package https://github.com/bioinfo-ut/GenomeTester4/
 
 # Define paths
-human_chr_path="/storage9/db/human_37/data/chr"
-chimp_chr_path="/storage9/db/chimp_214/data/chr"
-chimp_list_path="/storage9/db/kmer_lists/" # Must be writable
+human_chr_path=""
+chimp_chr_path=""
+chimp_list_path="" # Must be writable
 chimp_list_filename="pan_troglodytes_32.list"
-
+# Help message
+usage() {
+    echo "Usage: $0 -h <human chr ref> -c <chimp chr ref> [-o <output path>] [-f <output filename>]"
+    exit 1
+}
 # Create 32-mer list from the chimpanzee genome, if it does not yet exist.
 # NB! The list file size is ca 30 GB
 chimp_list="${chimp_list_path}/${chimp_list_filename}"
@@ -24,7 +27,7 @@ if [ ! -f $chimp_list ];then
 		chmod 755 glistmaker
 	fi
 	echo "Chimp list does not exist. Generating..."
-	./glistmaker "${chimp_chr_path}/*fa" -w 32 -o pan_troglodytes
+	./glistmaker "${chimp_chr_path}/*fa" -w 32 -o ${chimp_list}
 fi
 
 if [ ! -x glistquery ];then
