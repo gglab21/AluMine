@@ -60,8 +60,9 @@ echo -n "Number of REF-plus candidates with TSD sequence: "
 cat Alu.pre-blast.kmer.db | wc -l
 
 # Run BLAST detected candidates and keep only the candidates that have >100 bits of homology with known Alu elements
-makeblastdb -in Alu.fas -dbtype nucl -out Alu
+formatdb -i /opt/AluMine/discovery_REF-plus/Alu.fas -p F -o T
 blastall -i Alu.pre-blast.fas -d Alu.fas -p blastn -G 1 -E 1 -F F -b 1 -v 1 -m 8 | awk '{if($12>100)print}' | cut -f 1 | sort -n | uniq > Alu.REF-plus.blast
+#makeblastdb -in Alu.fas -dbtype nucl -out Alu
 #blastn -query Alu.pre-blast.fas -db Alu -word_size 11 -gapopen 1 -gapextend 1 -dust no -num_alignments 1 -outfmt 6 | awk '{if($12>100)print}' | cut -f 1 | sort -n | uniq > Alu.REF-plus.blast
 extract_kmers_by_name.pl Alu.REF-plus.blast Alu.pre-blast.kmer.db > Alu.after-blast.kmer.db
 extract_fasta_by_name.pl Alu.REF-plus.blast Alu.pre-blast.fas > Alu.REF-plus.fas
