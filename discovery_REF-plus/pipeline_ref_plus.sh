@@ -43,7 +43,7 @@ if [ ! -f $chimp_list ];then
 	#	chmod 755 glistmaker
 	#fi
 	echo "Chimp list does not exist. Generating..."
-	glistmaker ${chimp_chr_path}/*fa -w 32 -o ${chimp_list} --num-threads 4
+	glistmaker ${chimp_chr_path}/*fa -w 32 -o ${chimp_list} --num_threads 4
 fi
 
 #if [ ! -x glistquery ];then
