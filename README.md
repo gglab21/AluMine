@@ -1,5 +1,7 @@
 # AluMine
 
+This is a copy from  https://github.com/bioinfo-ut/AluMine. 
+
 This GitHub repository stores various scripts required to discover and genotype polymorphic Alu element insertions. There are four different workflows: REF-plus discovery, REF-minus discovery, merging and filtering workflow and genotyping workflow. REF-plus and REF-minus workflows generate text file containing 32-mer pairs that can be subsequently used for genotyping using FastGT package. The scripts are written in PERL and bash.
 
 Downloading to local server:  
