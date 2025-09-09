@@ -15,8 +15,7 @@
 # if [ ! -s NA12892_S1.bam ];then
 #   wget http://bioinfo.ut.ee/FastGT/downloads/NA12892_S1.bam
 # fi
-sample_path="."
-samples=(NA12891_S1 NA12892_S1)
+
 
 ############# Alternatively define path and ID-s of your own samples: ##########
 # The sample names must be matched with BAM or FASTQ file names
@@ -33,48 +32,59 @@ samples=(NA12891_S1 NA12892_S1)
 # samples=(V19411-clone V26498-clone)
 
 ########## Define human reference genome path for creating gtester indices #####
-human_chr_path="/storage9/db/human_37/data/chr" # Each chr in separate file, cannot use multifasta files
-gtester_path="/storage9/db/kmer_indexes"
-gtester_prefix="${gtester_path}/human_37"
+sample_path=""
+samples=""
+human_chr_path=""   # "/storage9/db/human_37/data/chr" # Each chr in separate file, cannot use multifasta files
+gtester_path=""    #"/storage9/db/kmer_indexes"
+gtester_prefix="${gtester_path}/human_38"
 gtester_index="${gtester_prefix}_25.index"
 gtester_names="${gtester_prefix}.names"
 # Precompiled index and name files can be downloaded from http://bioinfo.ut.ee/AluMine/
 ############# Done with path settings #################################################################################
-
-
+# Help message
+usage() {
+    echo "Usage: $0 -h <human chr ref> -k <kmer list output path> -p <sample path> -s <sample id>"
+    exit 1
+}
+# Parse command-line arguments
+while getopts "h:k:p:s:" opt; do
+  case $opt in
+    h) human_chr_path="$OPTARG" ;;
+    k) gtester_path="$OPTARG" ;;
+    p) sample_path="$OPTARG" ;;
+    s) samples="$OPTARG" ;;
+    *) usage ;;
+  esac
+done
 #################### Generating gtester index file ###############################
 if [ ! -s $gtester_index ] || [ ! -s $gtester_names ];then
-  if [ ! -x gindexer ];then
-    cp ../bin/gindexer .
-    chmod 755 gindexer
-  fi
   echo "gtester 25-mer index does not exist. Generating... This will take an hour or more"
-  ./gindexer -n 25 -o ${gtester_prefix} -i \
-"${human_chr_path}/1.fa" \
-"${human_chr_path}/2.fa" \
-"${human_chr_path}/3.fa" \
-"${human_chr_path}/4.fa" \
-"${human_chr_path}/5.fa" \
-"${human_chr_path}/6.fa" \
-"${human_chr_path}/7.fa" \
-"${human_chr_path}/8.fa" \
-"${human_chr_path}/9.fa" \
-"${human_chr_path}/10.fa" \
-"${human_chr_path}/11.fa" \
-"${human_chr_path}/12.fa" \
-"${human_chr_path}/13.fa" \
-"${human_chr_path}/14.fa" \
-"${human_chr_path}/15.fa" \
-"${human_chr_path}/16.fa" \
-"${human_chr_path}/17.fa" \
-"${human_chr_path}/18.fa" \
-"${human_chr_path}/19.fa" \
-"${human_chr_path}/20.fa" \
-"${human_chr_path}/21.fa" \
-"${human_chr_path}/22.fa" \
-"${human_chr_path}/X.fa" \
-"${human_chr_path}/Y.fa" \
-"${human_chr_path}/MT.fa"
+  gindexer -n 25 -o ${gtester_prefix} -i \
+"${human_chr_path}/chr1.fa" \
+"${human_chr_path}/chr2.fa" \
+"${human_chr_path}/chr3.fa" \
+"${human_chr_path}/chr4.fa" \
+"${human_chr_path}/chr5.fa" \
+"${human_chr_path}/chr6.fa" \
+"${human_chr_path}/chr7.fa" \
+"${human_chr_path}/chr8.fa" \
+"${human_chr_path}/chr9.fa" \
+"${human_chr_path}/chr10.fa" \
+"${human_chr_path}/chr11.fa" \
+"${human_chr_path}/chr12.fa" \
+"${human_chr_path}/chr13.fa" \
+"${human_chr_path}/chr14.fa" \
+"${human_chr_path}/chr15.fa" \
+"${human_chr_path}/chr16.fa" \
+"${human_chr_path}/chr17.fa" \
+"${human_chr_path}/chr18.fa" \
+"${human_chr_path}/chr19.fa" \
+"${human_chr_path}/chr20.fa" \
+"${human_chr_path}/chr21.fa" \
+"${human_chr_path}/chr22.fa" \
+"${human_chr_path}/chrX.fa" \
+"${human_chr_path}/chrY.fa" \
+"${human_chr_path}/chrMT.fa"
 fi
 
 ################## Discovery of potential REF-minus Alus ######################
@@ -111,16 +121,10 @@ echo "Finished discovery of REF-minus elements."
 echo "Starting gtester runs. This takes 2-6 hours for the first sample and few minutes for each subsequent sample."
 for id in ${samples[@]}
 do
-  # Copy gtester binary here if necessary
-  if [ ! -x gtester ];then
-    cp ../bin/gtester .
-    chmod 775 gtester
-  fi
-
   # Find locations and generate 32-mer database
   if [ -s $id.gtester.input.txt ] && [ ! -s $id.gtester.output.txt ];then
     # Run gtester for each sample
-    ./gtester -i $gtester_index -g $gtester_names -3p 10 -f $id.gtester.input.txt > $id.gtester.output.txt
+    gtester -i $gtester_index -g $gtester_names -3p 10 -f $id.gtester.input.txt > $id.gtester.output.txt
     # post-process the output, generating kmer database
     cat $id.gtester.output.txt | perl ref_minus_post_gtester.pl > $id.REF-minus.kmer.db
     # Clean up
