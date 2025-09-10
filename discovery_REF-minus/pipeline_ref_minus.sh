@@ -140,7 +140,7 @@ done
 echo "Finished gtester runs."
 
 ############ Merging REF-minuses from all samples into one database ############
-echo "Merging REF-minus elements from all samples..."
+#echo "Merging REF-minus elements from all samples..."
 # cd /storage7/analyysid/alu_insetrion_minus_181008/tester/
 # for i in V*db
 # do
@@ -149,18 +149,18 @@ echo "Merging REF-minus elements from all samples..."
 #   cat $i | ~/sort_and_filter_kmer_db.sh | ~/count_GC_kmer_db.sh > ~/filtered_REF_minus2/${i}
 # done
 
-rm -f tmp.kmer.db
-touch tmp.kmer.db
-for id in ${samples[@]}
-do
-  cat $id.REF-minus.kmer.db >> tmp.kmer.db
-done
+#rm -f tmp.kmer.db
+#touch tmp.kmer.db
+#for id in ${samples[@]}
+#do
+#  cat $id.REF-minus.kmer.db >> tmp.kmer.db
+#done
 
 ################ Filtering the final database #######################
 # Remove closely located candidates (within 25 bp from each other)
 # and those with GC% >= 30/32 or GC% <= 2/32
 # and those that have identical k-mer in the database
 # (gmer_counter is confused by k-mers with identical sequences)
-cat tmp.kmer.db | ./sort_kmer_db.sh | uniq | ./remove_closely_located_and_GC_rich_kmers.pl | ./remove_all_duplicate_kmers.pl > REF-minus.kmer.db
-rm -f tmp.kmer.db
-echo "Finished merging REF-minus elements. The results are in the file REF-minus.kmer.db"
+#cat tmp.kmer.db | ./sort_kmer_db.sh | uniq | ./remove_closely_located_and_GC_rich_kmers.pl | ./remove_all_duplicate_kmers.pl > REF-minus.kmer.db
+#rm -f tmp.kmer.db
+#echo "Finished merging REF-minus elements. The results are in the file REF-minus.kmer.db"
