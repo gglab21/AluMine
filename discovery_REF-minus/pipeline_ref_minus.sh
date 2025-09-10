@@ -99,6 +99,7 @@ do
      infile_fastq="${sample_path}/${id}*.fastq"
      # Define name to GZIPPED FASTQ files given the sample name. Multiple FASTQ files per sample permitted
      infile_gzip="${sample_path}/${id}*.gz"
+     infile_cram="${sample_path}/${id}.cram"
 
      if [ -s $infile_bam ];then
        # If the infile(s) are in BAM format use this script:
@@ -109,6 +110,8 @@ do
      elif [ `ls -1 $infile_gzip 2>/dev/null | wc -l ` -gt 0 ];then  # Check whether at least one file with this sample name
        # If the infile(s) are in FASTQ format use another script:
        cat $infile_gzip | gunzip | perl find_ref_minus_candidates_fastq.pl | sort  | uniq  >  $id.gtester.input.txt
+     elif [ -s $infile_cram ]; then
+        samtools view -b -T ${human_chr_path}/Homo_sapiens_assembly38.fasta ${infile_cram} | perl find_ref_minus_candidates_bam.pl | sort  | uniq  >  $id.gtester.input.txt
      else
        echo "$infile_bam or $infile_fastq not found."
      fi
