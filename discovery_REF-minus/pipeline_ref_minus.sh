@@ -43,14 +43,13 @@ gtester_names="${gtester_prefix}.names"
 ############# Done with path settings #################################################################################
 # Help message
 usage() {
-    echo "Usage: $0 -h <human chr ref> -k <kmer list output path> -p <sample path> -s <sample id>"
+    echo "Usage: $0 -h <human chr ref>  -p <sample path> -s <sample id>"
     exit 1
 }
 # Parse command-line arguments
-while getopts "h:k:p:s:" opt; do
+while getopts "h:p:s:" opt; do
   case $opt in
     h) human_chr_path="$OPTARG" ;;
-    k) gtester_path="$OPTARG" ;;
     p) sample_path="$OPTARG" ;;
     s) samples="$OPTARG" ;;
     *) usage ;;
