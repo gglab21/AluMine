@@ -82,7 +82,7 @@ if [ ! -s $gtester_index ] || [ ! -s $gtester_names ];then
 "${human_chr_path}/chr21.fa" \
 "${human_chr_path}/chr22.fa" \
 "${human_chr_path}/chrX.fa" \
-"${human_chr_path}/chrY.fa" \
+"${human_chr_path}/chrY.fa" 
 #"${human_chr_path}/chrMT.fa"
 fi
 
