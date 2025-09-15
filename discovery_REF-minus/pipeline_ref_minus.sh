@@ -35,7 +35,7 @@
 sample_path=""
 samples=""
 human_chr_path=""   # "/storage9/db/human_37/data/chr" # Each chr in separate file, cannot use multifasta files
-gtester_path=""    #"/storage9/db/kmer_indexes"
+gtester_path="."    #"/storage9/db/kmer_indexes"
 gtester_prefix="${gtester_path}/human_38"
 gtester_index="${gtester_prefix}_25.index"
 gtester_names="${gtester_prefix}.names"
@@ -110,7 +110,7 @@ do
        # If the infile(s) are in FASTQ format use another script:
        cat $infile_gzip | gunzip | perl find_ref_minus_candidates_fastq.pl | sort  | uniq  >  $id.gtester.input.txt
      elif [ -s $infile_cram ]; then
-        samtools view -b -T ${human_chr_path}/Homo_sapiens_assembly38.fasta ${infile_cram} | perl find_ref_minus_candidates_bam.pl | sort  | uniq  >  $id.gtester.input.txt
+        samtools view -T ${human_chr_path}/Homo_sapiens_assembly38.fasta ${infile_cram} | perl find_ref_minus_candidates_bam.pl | sort  | uniq  >  $id.gtester.input.txt
      else
        echo "$infile_bam or $infile_fastq not found."
      fi
