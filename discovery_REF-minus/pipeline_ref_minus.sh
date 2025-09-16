@@ -1,4 +1,4 @@
-#! /bin/bash
+#!/bin/bash
 
 # Description: This is a pipeline for discovery of REF-minus polymorphic ALU
 # element insertions from BAM or FASTQ files.
