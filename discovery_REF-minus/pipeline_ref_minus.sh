@@ -47,7 +47,7 @@ usage() {
     exit 1
 }
 # Parse command-line arguments
-while getopts "h:p:s:" opt; do
+while getopts "h:p:s:c:" opt; do
   case $opt in
     h) human_chr_path="$OPTARG" ;;
     p) sample_path="$OPTARG" ;;
