@@ -43,7 +43,7 @@ gtester_names="${gtester_prefix}.names"
 ############# Done with path settings #################################################################################
 # Help message
 usage() {
-    echo "Usage: $0 -h <human chr ref>  -p <sample path> -s <sample id>"
+    echo "Usage: $0 -h <human chr ref>  -p <sample path> -s <sample id> -c <cram_filename>"
     exit 1
 }
 # Parse command-line arguments
@@ -52,6 +52,7 @@ while getopts "h:p:s:" opt; do
     h) human_chr_path="$OPTARG" ;;
     p) sample_path="$OPTARG" ;;
     s) samples="$OPTARG" ;;
+    c) infile="$OPTARG" ;;
     *) usage ;;
   esac
 done
@@ -59,31 +60,31 @@ done
 if [ ! -s $gtester_index ] || [ ! -s $gtester_names ];then
   echo "gtester 25-mer index does not exist. Generating... This will take an hour or more"
   gindexer -n 25 -o ${gtester_prefix} -i \
-"${human_chr_path}/chr1.fa" \
-"${human_chr_path}/chr2.fa" \
-"${human_chr_path}/chr3.fa" \
-"${human_chr_path}/chr4.fa" \
-"${human_chr_path}/chr5.fa" \
-"${human_chr_path}/chr6.fa" \
-"${human_chr_path}/chr7.fa" \
-"${human_chr_path}/chr8.fa" \
-"${human_chr_path}/chr9.fa" \
-"${human_chr_path}/chr10.fa" \
-"${human_chr_path}/chr11.fa" \
-"${human_chr_path}/chr12.fa" \
-"${human_chr_path}/chr13.fa" \
-"${human_chr_path}/chr14.fa" \
-"${human_chr_path}/chr15.fa" \
-"${human_chr_path}/chr16.fa" \
-"${human_chr_path}/chr17.fa" \
-"${human_chr_path}/chr18.fa" \
-"${human_chr_path}/chr19.fa" \
-"${human_chr_path}/chr20.fa" \
-"${human_chr_path}/chr21.fa" \
-"${human_chr_path}/chr22.fa" \
-"${human_chr_path}/chrX.fa" \
-"${human_chr_path}/chrY.fa" 
-#"${human_chr_path}/chrMT.fa"
+    "${human_chr_path}/chr1.fa" \
+    "${human_chr_path}/chr2.fa" \
+    "${human_chr_path}/chr3.fa" \
+    "${human_chr_path}/chr4.fa" \
+    "${human_chr_path}/chr5.fa" \
+    "${human_chr_path}/chr6.fa" \
+    "${human_chr_path}/chr7.fa" \
+    "${human_chr_path}/chr8.fa" \
+    "${human_chr_path}/chr9.fa" \
+    "${human_chr_path}/chr10.fa" \
+    "${human_chr_path}/chr11.fa" \
+    "${human_chr_path}/chr12.fa" \
+    "${human_chr_path}/chr13.fa" \
+    "${human_chr_path}/chr14.fa" \
+    "${human_chr_path}/chr15.fa" \
+    "${human_chr_path}/chr16.fa" \
+    "${human_chr_path}/chr17.fa" \
+    "${human_chr_path}/chr18.fa" \
+    "${human_chr_path}/chr19.fa" \
+    "${human_chr_path}/chr20.fa" \
+    "${human_chr_path}/chr21.fa" \
+    "${human_chr_path}/chr22.fa" \
+    "${human_chr_path}/chrX.fa" \
+    "${human_chr_path}/chrY.fa" 
+    #"${human_chr_path}/chrMT.fa"
 fi
 
 ################## Discovery of potential REF-minus Alus ######################
@@ -93,12 +94,12 @@ do
    echo "Starting REF-minus discovery for $id"
    if [ ! -s $id.gtester.input.txt ];then
      # Define name of BAM files given the sample name
-     infile_bam="${sample_path}/${id}.bam"
+     infile_bam="${sample_path}/${infile}.bam"
      # Define name to FASTQ files given the sample name. Multiple FASTQ files per sample permitted
-     infile_fastq="${sample_path}/${id}*.fastq"
+     infile_fastq="${sample_path}/${infile}*.fastq"
      # Define name to GZIPPED FASTQ files given the sample name. Multiple FASTQ files per sample permitted
-     infile_gzip="${sample_path}/${id}*.gz"
-     infile_cram="${sample_path}/${id}.cram"
+     infile_gzip="${sample_path}/${infile}*.gz"
+     infile_cram="${sample_path}/${infile}.cram"
 
      if [ -s $infile_bam ];then
        # If the infile(s) are in BAM format use this script:
