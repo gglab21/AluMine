@@ -43,7 +43,7 @@ gtester_names="${gtester_prefix}.names"
 ############# Done with path settings #################################################################################
 # Help message
 usage() {
-    echo "Usage: $0 -h <human chr ref>  -p <sample path> -s <sample id> -c <cram_filename>"
+    echo "Usage: $0 -h <human chr ref>  -p <sample path> -s <sample id> -c <cram filename>"
     exit 1
 }
 # Parse command-line arguments
