@@ -103,15 +103,15 @@ do
 
      if [ -s $infile_bam ];then
        # If the infile(s) are in BAM format use this script:
-       samtools view $infile_bam | perl find_ref_minus_candidates_bam.pl | sort  | uniq  >  $id.gtester.input.txt
+       samtools view $infile_bam | find_ref_minus_candidates_bam.pl | sort  | uniq  >  $id.gtester.input.txt
      elif [ `ls -1 $infile_fastq 2>/dev/null | wc -l ` -gt 0 ];then  # Check whether at least one file with this sample name
        # If the infile(s) are in FASTQ format use another script:
-       cat $infile_fastq | perl find_ref_minus_candidates_fastq.pl | sort  | uniq  >  $id.gtester.input.txt
+       cat $infile_fastq | find_ref_minus_candidates_fastq.pl | sort  | uniq  >  $id.gtester.input.txt
      elif [ `ls -1 $infile_gzip 2>/dev/null | wc -l ` -gt 0 ];then  # Check whether at least one file with this sample name
        # If the infile(s) are in FASTQ format use another script:
-       cat $infile_gzip | gunzip | perl find_ref_minus_candidates_fastq.pl | sort  | uniq  >  $id.gtester.input.txt
+       cat $infile_gzip | gunzip | find_ref_minus_candidates_fastq.pl | sort  | uniq  >  $id.gtester.input.txt
      elif [ -s $infile_cram ]; then
-        samtools view -T ${human_chr_path}/Homo_sapiens_assembly38.fasta ${infile_cram} | perl find_ref_minus_candidates_bam.pl | sort  | uniq  >  $id.gtester.input.txt
+        samtools view -T ${human_chr_path}/Homo_sapiens_assembly38.fasta ${infile_cram} | find_ref_minus_candidates_bam.pl | sort  | uniq  >  $id.gtester.input.txt
      else
        echo "$infile_bam or $infile_fastq not found."
      fi
@@ -129,7 +129,7 @@ do
     # Run gtester for each sample
     gtester -i $gtester_index -g $gtester_names -3p 10 -f $id.gtester.input.txt > $id.gtester.output.txt
     # post-process the output, generating kmer database
-    cat $id.gtester.output.txt | perl ref_minus_post_gtester.pl > $id.REF-minus.kmer.db
+    cat $id.gtester.output.txt | ref_minus_post_gtester.pl > $id.REF-minus.kmer.db
     # Clean up
     rm -f $id.gtester.input.txt
     rm -f $id.gtester.output.txt
